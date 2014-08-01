@@ -1,5 +1,23 @@
-<ul>
-{% for preview in previews %}
-    <li><a href="{{ path("layout_preview", {preview: preview.key}) }}">{{ preview.title }}</a></li>
-{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Maas Profile Layouts</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{{ coreAsset("/css/core.css") }}">
+    </head>
+    <body>
+        <main>
+            <h1>Gluggi</h1>
+
+            {% if previews is not empty %}
+                <ul>
+                {% for preview in previews %}
+                    <li><a href="{{ path("layout_preview", {preview: preview.key}) }}">{{ preview.title }}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>Keine Previews gefunden.</p>
+            {% endif %}
+        </main>
+    </body>
+</html>

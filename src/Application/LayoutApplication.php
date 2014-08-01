@@ -17,18 +17,20 @@ class LayoutApplication extends Application
     /**
      * {@inheritdoc}
      */
-    public function __construct (array $values = array())
+    public function __construct ($webDir, array $values = array())
     {
         parent::__construct($values);
 
-        $this->bootstrap();
+        $this->bootstrap(dirname($webDir));
     }
 
 
     /**
      * Bootstraps the complete application
+     *
+     * @param string $baseDir the path to the web dir
      */
-    private function bootstrap ()
+    private function bootstrap ($baseDir)
     {
         // register providers
         $this->register(new TwigServiceProvider());
@@ -36,21 +38,21 @@ class LayoutApplication extends Application
         $this->register(new ServiceControllerServiceProvider());
 
         // register template paths
-        $libDir = dirname(dirname(__DIR__)) . "/resources/";
-        $this["twig.loader.filesystem"]->addPath($libDir . "/core/views",              "core");
-        $this["twig.loader.filesystem"]->addPath(BASE_DIR . "/layout/views/components", "component");
-        $this["twig.loader.filesystem"]->addPath(BASE_DIR . "/layout/views/layouts",    "layout");
-        $this["twig.loader.filesystem"]->addPath(BASE_DIR . "/layout/views/pages",      "page");
-        $this["twig.loader.filesystem"]->addPath(BASE_DIR . "/layout/views",            "preview");
+        $libDir = dirname(dirname(__DIR__)) . "/resources";
+        $this["twig.loader.filesystem"]->addPath($libDir . "/views",                    "core");
+        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views/components", "component");
+        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views/layouts",    "layout");
+        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views/pages",      "page");
+        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views",            "preview");
 
         // register model
-        $this["model.layout.preview"] = $this->share(function ()
+        $this["model.layout.preview"] = $this->share(function () use ($baseDir)
         {
-            return new LayoutPreview();
+            return new LayoutPreview($baseDir);
         });
 
         // register controllers
-        $this["controller.preview"] = $this->share(function () use ($app)
+        $this["controller.preview"] = $this->share(function ()
         {
             return new PreviewController($this["model.layout.preview"], $this["twig"]);
         });

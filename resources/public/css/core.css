@@ -1,0 +1,30 @@
+@import url("//fonts.googleapis.com/css?family=Roboto");
+
+body {
+    background-color: lightgray;
+    font-family: Roboto, sans-serif;
+    font-size: 100%;
+}
+
+main {
+    max-width: 960px;
+    margin: 4em auto;
+}
+
+h1 {
+    font-weight: 400;
+    font-size: 3em;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+li {
+    margin-bottom: .5em;
+}

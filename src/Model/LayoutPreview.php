@@ -10,13 +10,35 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class LayoutPreview
 {
     /**
+     * The base dir of the application
+     *
+     * @var string
+     */
+    private $baseDir;
+
+
+    /**
+     * @param string $baseDir
+     */
+    public function __construct ($baseDir)
+    {
+        $this->baseDir = $baseDir;
+    }
+
+
+    /**
      * Returns a list of all previews
      *
      * @return array
      */
     public function getAllPreviews ()
     {
-        $iterator = new \DirectoryIterator(BASE_DIR . "/layout/views");
+        if (!is_dir("{$this->baseDir}/layout/views"))
+        {
+            return [];
+        }
+
+        $iterator = new \DirectoryIterator("{$this->baseDir}/layout/views");
         $previews = [];
 
         /** @var \SplFileInfo $file */
