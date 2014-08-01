@@ -1,0 +1,5 @@
+<ul>
+{% for preview in previews %}
+    <li><a href="{{ path("layout_preview", {preview: preview.key}) }}">{{ preview.title }}</a></li>
+{% endfor %}
+</ul>

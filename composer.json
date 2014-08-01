@@ -1,0 +1,25 @@
+{
+    "name":         "becklyn/gluggi",
+    "description":  "A tool which helps with developing templates in isolation",
+    "keywords":     ["template"],
+    "type":         "app",
+    "homepage":     "https://github.com/Becklyn/Gluggi",
+    "license":      "BSD-3-Clause",
+    "authors": [
+        {
+            "name":     "Becklyn GmbH",
+            "homepage": "http://becklyn.com/"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "BecklynLayout\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "silex/silex": "~1.2",
+        "twig/twig":   "~1.16",
+        "symfony/twig-bridge": "~2.5"
+    }
+}

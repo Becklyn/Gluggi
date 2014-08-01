@@ -1,0 +1,138 @@
+<?php
+
+namespace BecklynLayout\Twig;
+
+use Silex\Application;
+
+/**
+ * The twig extensions for the core
+ */
+class TwigExtension extends \Twig_Extension
+{
+    /**
+     * @var Application
+     */
+    private $application;
+
+
+    /**
+     * @param Application $application
+     */
+    public function __construct (Application $application)
+    {
+        $this->application = $application;
+    }
+
+
+    /**
+     * Generates a path to a layout asset
+     *
+     * @param string $asset
+     *
+     * @return string
+     */
+    public function asset ($asset)
+    {
+        return $this->application["request"]->getBasePath() . "/assets/" . ltrim($asset, "/");
+    }
+
+
+    /**
+     * Generates a path to a core asset
+     *
+     * @param string $asset
+     *
+     * @return string
+     */
+    public function coreAsset ($asset)
+    {
+        return $this->application["request"]->getBasePath() . "/core/" . ltrim($asset, "/");
+    }
+
+
+    /**
+     * Renders a template list
+     *
+     * @param string[] $list
+     */
+    public function templateList (array $list)
+    {
+        return $this->application["twig"]->render("@core/templateList.twig", [
+            "templates" => $list
+        ]);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions ()
+    {
+        return [
+            new \Twig_SimpleFunction("asset",        [$this, "asset"]),
+            new \Twig_SimpleFunction("coreAsset",    [$this, "coreAsset"]),
+            new \Twig_SimpleFunction("templateList", [$this, "templateList"], ["is_safe" => ["html"]]),
+        ];
+    }
+
+
+    /**
+     * Returns an anchor-compatible id
+     *
+     * @param string $template
+     *
+     * @return string
+     */
+    public function filterAnchor ($template)
+    {
+        $replace = [
+            "@"     => "",
+            "/"     => "-",
+            ".twig" => ""
+        ];
+
+        return str_replace(array_keys($replace), array_values($replace), $template);
+    }
+
+
+    /**
+     * Returns a title for this component
+     *
+     * @param string $template
+     *
+     * @return string
+     */
+    public function filterTitle ($template)
+    {
+        if (1 === preg_match("~^@(?P<type>.*?)\\/(?P<name>.*?)\\.twig$~", $template, $matches))
+        {
+            return ucwords($matches["type"]) . ": " . ucwords(str_replace(["_", "-"], " ", $matches["name"]));
+        }
+
+        return $template;
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilters ()
+    {
+        return [
+            new \Twig_SimpleFilter("preview_anchor", [$this, "filterAnchor"]),
+            new \Twig_SimpleFilter("preview_title",  [$this, "filterTitle"]),
+        ];
+    }
+
+
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName ()
+    {
+        return __CLASS__;
+    }
+}
