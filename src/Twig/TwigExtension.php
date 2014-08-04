@@ -69,9 +69,12 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions ()
     {
         return [
-            new \Twig_SimpleFunction("asset",        [$this, "asset"]),
-            new \Twig_SimpleFunction("coreAsset",    [$this, "coreAsset"]),
-            new \Twig_SimpleFunction("templateList", [$this, "templateList"], ["is_safe" => ["html"]]),
+            new \Twig_SimpleFunction("asset",         [$this, "asset"]),
+            new \Twig_SimpleFunction("coreAsset",     [$this, "coreAsset"]),
+            new \Twig_SimpleFunction("templateList",  [$this, "templateList"], ["is_safe" => ["html"]]),
+            new \Twig_SimpleFunction("allComponents", [$this->application["model.layout.component"], "getAllTemplateReferences"]),
+            new \Twig_SimpleFunction("allLayouts",    [$this->application["model.layout.layout"], "getAllTemplateReferences"]),
+            new \Twig_SimpleFunction("allPages",      [$this->application["model.layout.page"], "getAllTemplateReferences"]),
         ];
     }
 
