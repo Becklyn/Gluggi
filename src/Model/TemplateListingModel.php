@@ -7,8 +7,10 @@ namespace BecklynLayout\Model;
 use Silex\Application;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class LayoutPreview
+class TemplateListingModel
 {
+
+
     /**
      * The base dir of the application
      *
@@ -18,11 +20,19 @@ class LayoutPreview
 
 
     /**
-     * @param string $baseDir
+     * @var string
      */
-    public function __construct ($baseDir)
+    private $twigNamespace;
+
+
+    /**
+     * @param string $baseDir
+     * @param string $twigNamespace
+     */
+    public function __construct ($baseDir, $twigNamespace)
     {
-        $this->baseDir = $baseDir;
+        $this->baseDir       = $baseDir;
+        $this->twigNamespace = $twigNamespace;
     }
 
 
@@ -31,7 +41,7 @@ class LayoutPreview
      *
      * @return array
      */
-    public function getAllPreviews ()
+    public function getAllTemplates ()
     {
         if (!is_dir("{$this->baseDir}/layout/views"))
         {
@@ -49,11 +59,12 @@ class LayoutPreview
                 continue;
             }
 
-            $key = $file->getBasename(".{$file->getExtension()}");
+            $key            = $file->getBasename(".{$file->getExtension()}");
             $previews[$key] = [
-                "key"      => $key,
-                "fileName" => $file->getBasename(),
-                "title"    => ucwords(str_replace(["_", "-"], " ", $key))
+                "key"       => $key,
+                "fileName"  => $file->getBasename(),
+                "title"     => ucwords(str_replace(["_", "-"], " ", $key)),
+                "reference" => "@{$this->twigNamespace}/{$file->getBasename()}"
             ];
         }
 
@@ -68,12 +79,29 @@ class LayoutPreview
      *
      * @return null|array
      */
-    public function getPreview ($key)
+    public function getTemplateDetails ($key)
     {
-        $previews = $this->getAllPreviews();
+        $previews = $this->getAllTemplates();
 
         return array_key_exists($key, $previews)
             ? $previews[$key]
             : null;
+    }
+
+
+    /**
+     * Returns a list of all template references
+     *
+     * @return string[]
+     */
+    public function getAllTemplateReferences ()
+    {
+        return array_map(
+            function ($templateInfo)
+            {
+                return $templateInfo["reference"];
+            },
+            $this->getAllTemplates()
+        );
     }
 }

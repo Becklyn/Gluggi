@@ -3,20 +3,20 @@
 
 namespace BecklynLayout\Controller;
 
-use BecklynLayout\Model\LayoutPreview;
+use BecklynLayout\Model\TemplateListingModel;
 use Symfony\Component\HttpFoundation\Response;
 
 class PreviewController
 {
     /**
-     * @var LayoutPreview
+     * @var TemplateListingModel
      */
     private $previewModel;
 
     private $twig;
 
 
-    public function __construct (LayoutPreview $previewModel, \Twig_Environment $twig)
+    public function __construct (TemplateListingModel $previewModel, \Twig_Environment $twig)
     {
         $this->previewModel = $previewModel;
         $this->twig = $twig;
@@ -31,14 +31,14 @@ class PreviewController
     public function indexAction ()
     {
         return $this->twig->render("@core/index.twig", [
-            "previews" => $this->previewModel->getAllPreviews()
+            "previews" => $this->previewModel->getAllTemplates()
         ]);
     }
 
 
     public function previewAction ($preview)
     {
-        $previewData = $this->previewModel->getPreview($preview);
+        $previewData = $this->previewModel->getTemplateDetails($preview);
 
         if (null === $previewData)
         {

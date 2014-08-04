@@ -4,7 +4,7 @@
 namespace BecklynLayout\Application;
 
 use BecklynLayout\Controller\PreviewController;
-use BecklynLayout\Model\LayoutPreview;
+use BecklynLayout\Model\TemplateListingModel;
 use BecklynLayout\Twig\TwigExtension;
 use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
@@ -12,6 +12,9 @@ use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
 use Twig_Environment;
 
+/**
+ * The main application
+ */
 class LayoutApplication extends Application
 {
     /**
@@ -32,43 +35,104 @@ class LayoutApplication extends Application
      */
     private function bootstrap ($baseDir)
     {
-        // register providers
+        $this->registerProviders();
+        $this->registerCoreTwigNamespace();
+        $this->registerModelsAndTwigLayoutNamespaces($baseDir);
+        $this->registerControllers();
+        $this->registerTwigExtensions();
+        $this->defineCoreRouting();
+    }
+
+
+    /**
+     * Registers all used service providers
+     */
+    private function registerProviders ()
+    {
         $this->register(new TwigServiceProvider());
         $this->register(new UrlGeneratorServiceProvider());
         $this->register(new ServiceControllerServiceProvider());
+    }
 
-        // register template paths
+
+    /**
+     * Registers the @core twig namespace
+     */
+    private function registerCoreTwigNamespace ()
+    {
         $libDir = dirname(dirname(__DIR__)) . "/resources";
-        $this["twig.loader.filesystem"]->addPath($libDir . "/views",                    "core");
-        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views/components", "component");
-        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views/layouts",    "layout");
-        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views/pages",      "page");
-        $this["twig.loader.filesystem"]->addPath($baseDir . "/layout/views",            "preview");
 
-        // register model
-        $this["model.layout.preview"] = $this->share(function () use ($baseDir)
+        // register core
+        $this["twig.loader.filesystem"]->addPath("{$libDir}/views", "core");
+    }
+
+
+    /**
+     * Registers all models and all twig layout namespaces
+     *
+     * @param string $baseDir
+     */
+    private function registerModelsAndTwigLayoutNamespaces ($baseDir)
+    {
+        $parts = [
+            "component" => "{$baseDir}/layout/views/components",
+            "layout"    => "{$baseDir}/layout/views/layouts",
+            "page"      => "{$baseDir}/layout/views/pages",
+            "preview"   => "{$baseDir}/layout/views"
+        ];
+
+        foreach ($parts as $partNamespace => $partBaseUrl)
         {
-            return new LayoutPreview($baseDir);
-        });
+            // model
+            $this["model.layout.{$partNamespace}"] = $this->share(
+                function () use ($partBaseUrl, $partNamespace)
+                {
+                    return new TemplateListingModel($partBaseUrl, $partNamespace);
+                }
+            );
 
-        // register controllers
-        $this["controller.preview"] = $this->share(function ()
-        {
-            return new PreviewController($this["model.layout.preview"], $this["twig"]);
-        });
+            // twig template namespace
+            $this["twig.loader.filesystem"]->addPath($partBaseUrl, $partNamespace);
+        }
+    }
 
-        // add twig extensions
-        $this['twig'] = $this->share($this->extend('twig',
-            function(Twig_Environment $twig, Application $app)
+
+    /**
+     * Registers all controllers
+     */
+    private function registerControllers ()
+    {
+        $this["controller.layout.preview"] = $this->share(function ()
             {
-                $twig->addExtension(new TwigExtension($app));
-                return $twig;
+                return new PreviewController($this["model.layout.preview"], $this["twig"]);
             }
-        ));
+        );
+    }
 
 
-        // define routing
+    /**
+     * Registers all used twig extensions
+     */
+    private function registerTwigExtensions ()
+    {
+        $this['twig'] = $this->share($this->extend('twig',
+                function (Twig_Environment $twig, Application $app)
+                {
+                    $twig->addExtension(new TwigExtension($app));
+
+                    return $twig;
+                }
+            )
+        );
+    }
+
+
+    /**
+     * Defines the routes of the core app
+     */
+    private function defineCoreRouting ()
+    {
         $this->get("/", "controller.preview:indexAction");
-        $this->get("/preview/{preview}", "controller.preview:previewAction")->bind("layout_preview");
+        $this->get("/preview/{preview}", "controller.layout.preview:previewAction")->bind("layout_preview");
     }
 }
