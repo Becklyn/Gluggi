@@ -10,6 +10,7 @@ use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\UrlGeneratorServiceProvider;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Twig_Environment;
 
 /**
@@ -18,28 +19,21 @@ use Twig_Environment;
 class LayoutApplication extends Application
 {
     /**
-     * {@inheritdoc}
-     */
-    public function __construct ($webDir, array $values = array())
-    {
-        parent::__construct($values);
-
-        $this->bootstrap(dirname($webDir));
-    }
-
-
-    /**
      * Bootstraps the complete application
      *
-     * @param string $baseDir the path to the web dir
+     * @param string $webDir the path to the web dir
+     * @param array $config the config
      */
-    private function bootstrap ($baseDir)
+    public function bootstrap ($webDir, array $config = [])
     {
+        $baseDir = dirname($webDir);
+        $config  = $this->validateConfig($config);
+
         $this->registerProviders();
         $this->registerCoreTwigNamespace();
         $this->registerModelsAndTwigLayoutNamespaces($baseDir);
         $this->registerControllers();
-        $this->registerTwigExtensions();
+        $this->registerTwigExtensions($config);
         $this->defineCoreRouting();
     }
 
@@ -112,13 +106,21 @@ class LayoutApplication extends Application
 
     /**
      * Registers all used twig extensions
+     *
+     * @param array $config
      */
-    private function registerTwigExtensions ()
+    private function registerTwigExtensions (array $config)
     {
         $this['twig'] = $this->share($this->extend('twig',
-                function (Twig_Environment $twig, Application $app)
+                function (Twig_Environment $twig, Application $app) use ($config)
                 {
+                    // add custom extension
                     $twig->addExtension(new TwigExtension($app));
+
+                    // add global gluggi variable
+                    $twig->addGlobal("gluggi", [
+                        "config" => $config
+                    ]);
 
                     return $twig;
                 }
@@ -134,5 +136,24 @@ class LayoutApplication extends Application
     {
         $this->get("/",                  "controller.layout.preview:indexAction");
         $this->get("/preview/{preview}", "controller.layout.preview:previewAction")->bind("layout_preview");
+    }
+
+
+    /**
+     * Returns the resolved config
+     *
+     * @param array $config
+     *
+     * @return array
+     */
+    private function validateConfig (array $config)
+    {
+        $optionsResolver = new OptionsResolver();
+
+        $optionsResolver->setDefaults([
+            "title" => "Gluggi"
+        ]);
+
+        return $optionsResolver->resolve($config);
     }
 }
