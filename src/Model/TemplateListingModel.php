@@ -3,20 +3,19 @@
 
 namespace BecklynLayout\Model;
 
-
 use Silex\Application;
-use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * Generic model which handles the template listing
+ */
 class TemplateListingModel
 {
-
-
     /**
-     * The base dir of the application
+     * The dir containing the templates
      *
      * @var string
      */
-    private $baseDir;
+    private $templatesDir;
 
 
     /**
@@ -26,12 +25,12 @@ class TemplateListingModel
 
 
     /**
-     * @param string $baseDir
+     * @param string $templatesDir
      * @param string $twigNamespace
      */
-    public function __construct ($baseDir, $twigNamespace)
+    public function __construct ($templatesDir, $twigNamespace)
     {
-        $this->baseDir       = $baseDir;
+        $this->templatesDir  = $templatesDir;
         $this->twigNamespace = $twigNamespace;
     }
 
@@ -43,12 +42,7 @@ class TemplateListingModel
      */
     public function getAllTemplates ()
     {
-        if (!is_dir("{$this->baseDir}/layout/views"))
-        {
-            return [];
-        }
-
-        $iterator = new \DirectoryIterator("{$this->baseDir}/layout/views");
+        $iterator = new \DirectoryIterator($this->templatesDir);
         $previews = [];
 
         /** @var \SplFileInfo $file */
@@ -90,18 +84,21 @@ class TemplateListingModel
 
 
     /**
-     * Returns a list of all template references
+     * Returns a list of all template references, ordered alphabetically by file name
      *
      * @return string[]
      */
     public function getAllTemplateReferences ()
     {
-        return array_map(
+        $templates = array_map(
             function ($templateInfo)
             {
                 return $templateInfo["reference"];
             },
             $this->getAllTemplates()
         );
+
+        natcasesort($templates);
+        return $templates;
     }
 }
