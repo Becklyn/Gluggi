@@ -27,7 +27,7 @@ class LayoutApplication extends Application
     public function bootstrap ($webDir, array $config = [])
     {
         $baseDir = dirname($webDir);
-        $config  = $this->validateConfig($config);
+        $config  = $this->resolveConfig($config);
 
         $this->registerProviders();
         $this->registerCoreTwigNamespace();
@@ -146,7 +146,7 @@ class LayoutApplication extends Application
      *
      * @return array
      */
-    private function validateConfig (array $config)
+    private function resolveConfig (array $config)
     {
         $optionsResolver = new OptionsResolver();
 
