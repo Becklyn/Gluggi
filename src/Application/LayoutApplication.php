@@ -132,7 +132,7 @@ class LayoutApplication extends Application
      */
     private function defineCoreRouting ()
     {
-        $this->get("/", "controller.preview:indexAction");
+        $this->get("/",                  "controller.layout.preview:indexAction");
         $this->get("/preview/{preview}", "controller.layout.preview:previewAction")->bind("layout_preview");
     }
 }
