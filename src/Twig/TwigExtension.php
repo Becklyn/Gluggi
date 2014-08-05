@@ -54,11 +54,19 @@ class TwigExtension extends \Twig_Extension
      * Renders a template list
      *
      * @param string[] $list
+     * @param array    $options
+     *
+     * @return
      */
-    public function templateList (array $list)
+    public function templateList (array $list, array $options = [])
     {
+        $options = array_replace([
+            "fullScreen" => true
+        ], $options);
+
         return $this->application["twig"]->render("@core/templateList.twig", [
-            "templates" => $list
+            "templates" => $list,
+            "options" => $options
         ]);
     }
 
