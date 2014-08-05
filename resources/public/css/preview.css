@@ -1,13 +1,13 @@
 html, body {
     height: 100%;
+    background-color: lightgray;
 }
 
 .becklyn-preview-template-page {
     box-sizing: border-box;
     border-bottom: 1px solid #808080;
-    background-color: lightgray;
     position: relative;
-    padding: 50px 0;
+    padding: 100px 0;
     text-align: center;
 }
 
@@ -38,6 +38,7 @@ html, body {
     background-color: white;
     display: inline-block;
     text-align: left;
+    position: relative;
 }
 
 
