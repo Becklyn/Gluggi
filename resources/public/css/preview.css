@@ -4,36 +4,62 @@ html, body {
 
 .becklyn-preview-template-page {
     box-sizing: border-box;
-    min-height: 100%;
     border-bottom: 1px solid #808080;
     background-color: lightgray;
     position: relative;
+    padding: 50px 0;
+    text-align: center;
+}
+
+
+.becklyn-preview-template-page.is-full-page {
+    min-height: 100%;
+    padding: 0;
 }
 
 .becklyn-preview-template-page:last-child {
     border: 0;
 }
 
-.becklyn-preview-template-page::before {
-    content: attr(data-title);
+.becklyn-preview-template-page[id]::before {
+    content: "#" attr(id);
     display: block;
     position: absolute;
     top: 10px;
-    left: 10px;
+    right: 10px;
     color: #808080;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .becklyn-preview-template {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    margin: 0 auto;
     border: 1px solid #A9A9A9;
     padding: 20px;
     background-color: white;
+    display: inline-block;
+    text-align: left;
+}
+
+
+.becklyn-preview-template-page.is-full-page .becklyn-preview-template {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    display: block;
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+}
+
+.becklyn-preview-template[data-title]::before {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #808080;
 }

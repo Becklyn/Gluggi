@@ -1,6 +1,6 @@
 {% for template in templates %}
-<div class="becklyn-preview-template-page" data-title="{{ template|preview_title }}" id="{{ template|preview_anchor }}">
-    <div class="becklyn-preview-template">
+<div class="becklyn-preview-template-page is-full-page" id="{{ template|preview_anchor }}">
+    <div class="becklyn-preview-template" data-title="{{ template|preview_title }}">
         {% include template %}
     </div>
 </div>
