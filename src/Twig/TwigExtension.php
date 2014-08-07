@@ -38,6 +38,19 @@ class TwigExtension extends \Twig_Extension
 
 
     /**
+     * Generates a path to a content asset
+     *
+     * @param string $asset
+     *
+     * @return string
+     */
+    public function content ($asset)
+    {
+        return $this->application["request"]->getBasePath() . "/content/" . ltrim($asset, "/");
+    }
+
+
+    /**
      * Generates a path to a core asset
      *
      * @param string $asset
@@ -78,6 +91,7 @@ class TwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction("asset",         [$this, "asset"]),
+            new \Twig_SimpleFunction("content",       [$this, "content"]),
             new \Twig_SimpleFunction("coreAsset",     [$this, "coreAsset"]),
             new \Twig_SimpleFunction("templateList",  [$this, "templateList"], ["is_safe" => ["html"]]),
             new \Twig_SimpleFunction("allComponents", [$this->application["model.layout.component"], "getAllTemplateReferences"]),
