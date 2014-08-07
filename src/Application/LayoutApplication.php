@@ -3,7 +3,7 @@
 
 namespace BecklynLayout\Application;
 
-use BecklynLayout\Controller\PreviewController;
+use BecklynLayout\Controller\CoreController;
 use BecklynLayout\Model\TemplateListingModel;
 use BecklynLayout\Twig\TwigExtension;
 use Silex\Application;
@@ -96,9 +96,9 @@ class LayoutApplication extends Application
      */
     private function registerControllers ()
     {
-        $this["controller.layout.preview"] = $this->share(function ()
+        $this["controller.core"] = $this->share(function ()
             {
-                return new PreviewController($this["model.layout.preview"], $this["twig"]);
+                return new CoreController($this["model.layout.preview"], $this["model.layout.page"], $this["twig"]);
             }
         );
     }
@@ -134,8 +134,9 @@ class LayoutApplication extends Application
      */
     private function defineCoreRouting ()
     {
-        $this->get("/",                  "controller.layout.preview:indexAction");
-        $this->get("/preview/{preview}", "controller.layout.preview:previewAction")->bind("layout_preview");
+        $this->get("/",                  "controller.core:indexAction");
+        $this->get("/preview/{preview}", "controller.core:previewAction")->bind("layout_preview");
+        $this->get("/page/{page}",       "controller.core:pageAction")->bind("layout_page");
     }
 
 

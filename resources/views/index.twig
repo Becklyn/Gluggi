@@ -9,6 +9,7 @@
         <main>
             <h1>{{ gluggi.config.title }}</h1>
 
+            <h2>Previews</h2>
             {% if previews is not empty %}
                 <ul>
                 {% for preview in previews %}
@@ -17,6 +18,17 @@
                 </ul>
             {% else %}
                 <p>Keine Previews gefunden.</p>
+            {% endif %}
+
+            <h2>Pages</h2>
+            {% if pages is not empty %}
+                <ul>
+                    {% for page in pages %}
+                        <li><a href="{{ path("layout_page", {page: page.key}) }}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Keine Pages gefunden.</p>
             {% endif %}
         </main>
     </body>
