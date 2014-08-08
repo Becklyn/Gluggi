@@ -67,6 +67,23 @@ class TemplateListingModel
 
 
     /**
+     * Returns the listed templates
+     *
+     * @return array
+     */
+    public function getListedTemplates ()
+    {
+        return array_filter(
+            $this->getAllTemplates(),
+            function (array $template)
+            {
+                return ("_" !== substr($template["key"], 0, 1));
+            }
+        );
+    }
+
+
+    /**
      * Returns the preview by key
      *
      * @param string $key
@@ -95,7 +112,7 @@ class TemplateListingModel
             {
                 return $templateInfo["reference"];
             },
-            $this->getAllTemplates()
+            $this->getListedTemplates()
         );
 
         natcasesort($templates);
