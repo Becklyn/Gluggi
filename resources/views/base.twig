@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ gluggi.config.title }}</title>
         <meta charset="utf-8" />
+        <title>{% block title %}{{ gluggi.config.title }}{% endblock %}</title>
+
         <link rel="stylesheet" href="{{ coreAsset("/css/preview.css") }}">
-        <link rel="stylesheet" href="{{ asset("/css/app.css") }}">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset("/css/app.css") }}">
+        {% endblock %}
+
+        {% block javascripts %}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        {% endblock %}
     </head>
     <body class="{{ bodyClass|default("") }}">
         {% block body %}{% endblock %}
