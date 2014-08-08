@@ -1,7 +1,7 @@
 {% for template in templates %}
 <div class="becklyn-preview-template-page{% if options.fullScreen %} is-full-page{% endif %}" id="{{ template|preview_anchor }}">
     <div class="becklyn-preview-template" data-title="{{ template|preview_title }}">
-        {% include template %}
+        {% include template with {options: options} %}
     </div>
 </div>
 {% endfor %}

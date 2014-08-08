@@ -77,6 +77,9 @@ class TwigExtension extends \Twig_Extension
             "fullScreen" => true
         ], $options);
 
+        // this is a flag which tells the component that it is rendered in a template list
+        $options["inTemplateList"] = true;
+
         return $this->application["twig"]->render("@core/templateList.twig", [
             "templates" => $list,
             "options" => $options
