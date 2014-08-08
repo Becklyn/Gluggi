@@ -42,8 +42,8 @@ class CoreController
     public function indexAction ()
     {
         return $this->twig->render("@core/index.twig", [
-            "previews" => $this->previewModel->getAllTemplates(),
-            "pages"    => $this->pageModel->getAllTemplates()
+            "previews" => $this->previewModel->getListedTemplates(),
+            "pages"    => $this->pageModel->getListedTemplates()
         ]);
     }
 
