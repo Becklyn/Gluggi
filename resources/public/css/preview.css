@@ -32,27 +32,13 @@ html, body {
 }
 
 .becklyn-preview-template {
-    margin: 0 auto;
+    margin: 100px auto;
     border: 1px solid #A9A9A9;
     padding: 20px;
     background-color: white;
     display: inline-block;
     text-align: left;
     position: relative;
-}
-
-
-.becklyn-preview-template-page.is-full-page .becklyn-preview-template {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: 0;
-    display: block;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
 }
 
 .becklyn-preview-template[data-title]::before {
