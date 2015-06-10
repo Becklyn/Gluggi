@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{{ gluggi.config.title }}{% endblock %}</title>
 
         <link rel="stylesheet" href="{{ coreAsset("/css/preview.css") }}">
@@ -11,6 +12,7 @@
 
         {% block javascripts %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script src="{{ coreAsset("js/navigation.js") }}"></script>
         {% endblock %}
     </head>
     <body class="{{ bodyClass|default("") }}">
