@@ -1,9 +1,0 @@
-{# @var elements \BecklynLayout\Entity\Element[] #}
-{% for element in elements %}
-    <div class="gluggi-element" id="{{ element.id }}">
-        <a class="gluggi-element-title" href="">{{ element.fullTitle }}</a>
-        <div class="gluggi-element-stage">
-            {% include element.reference with {options: options} %}
-        </div>
-    </div>
-{% endfor %}

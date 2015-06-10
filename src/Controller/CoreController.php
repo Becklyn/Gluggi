@@ -112,7 +112,7 @@ class CoreController
                 $this->elementTypesModel->getListedElements($elementType)
             );
 
-            return $this->twig->render("@core/elements_overview.twig", [
+            return $this->twig->render("@core/elements_overview_page.twig", [
                 "elementReferences" => $elementReferences
             ]);
         }

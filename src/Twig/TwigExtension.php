@@ -65,17 +65,24 @@ class TwigExtension extends \Twig_Extension
 
 
     /**
-     * Renders a template list
+     * Renders a overview of the given elements
      *
      * @param string[] $list
      * @param array    $options
      *
      * @return
      */
-    public function templateList (array $list, array $options = [])
+    public function elementsOverview (array $list, array $options = [])
     {
+        $options = array_replace(
+            [
+                "includeNavigation" => true
+            ],
+            $options
+        );
+
         // this is a flag which tells the component that it is rendered in a template list
-        $options["inTemplateList"] = true;
+        $options["inElementList"] = true;
 
         $elements = array_map(
             function ($reference)
@@ -86,7 +93,7 @@ class TwigExtension extends \Twig_Extension
         );
 
 
-        return $this->application["twig"]->render("@core/template_list.twig", [
+        return $this->application["twig"]->render("@core/elements_overview.twig", [
             "elements" => $elements,
             "options" => $options
         ]);
@@ -99,10 +106,10 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions ()
     {
         return [
-            new \Twig_SimpleFunction("asset",         [$this, "asset"]),
-            new \Twig_SimpleFunction("content",       [$this, "content"]),
-            new \Twig_SimpleFunction("coreAsset",     [$this, "coreAsset"]),
-            new \Twig_SimpleFunction("templateList",  [$this, "templateList"], ["is_safe" => ["html"]]),
+            new \Twig_SimpleFunction("asset",            [$this, "asset"]),
+            new \Twig_SimpleFunction("content",          [$this, "content"]),
+            new \Twig_SimpleFunction("coreAsset",        [$this, "coreAsset"]),
+            new \Twig_SimpleFunction("elementsOverview", [$this, "elementsOverview"], ["is_safe" => ["html"]]),
         ];
     }
 

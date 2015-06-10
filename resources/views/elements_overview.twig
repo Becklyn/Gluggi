@@ -1,6 +1,13 @@
-{% extends gluggi.config.base_template %}
-
-{% block body %}
+{% if options.includeNavigation %}
     <div class="gluggi-navigation"></div>
-    {{ templateList(elementReferences) }}
-{% endblock %}
+{% endif %}
+
+{# @var elements \BecklynLayout\Entity\Element[] #}
+{% for element in elements %}
+    <div class="gluggi-element" id="{{ element.id }}">
+        <a class="gluggi-element-title" href="">{{ element.fullTitle }}</a>
+        <div class="gluggi-element-stage">
+            {% include element.reference with {options: options} %}
+        </div>
+    </div>
+{% endfor %}
