@@ -81,8 +81,8 @@ class TwigExtension extends \Twig_Extension
             $options
         );
 
-        // this is a flag which tells the component that it is rendered in a template list
-        $options["inElementList"] = true;
+        // this is a flag which tells the component that it is rendered in an elements overview
+        $options["inElementsOverview"] = true;
 
         $elements = array_map(
             function ($reference)

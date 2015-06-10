@@ -5,7 +5,6 @@ namespace BecklynLayout\Application;
 
 use BecklynLayout\Controller\CoreController;
 use BecklynLayout\Model\ElementTypesModel;
-use BecklynLayout\Model\TemplateListingModel;
 use BecklynLayout\Twig\TwigExtension;
 use Silex\Application;
 use Silex\Provider\ServiceControllerServiceProvider;
