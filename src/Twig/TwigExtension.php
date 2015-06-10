@@ -2,6 +2,7 @@
 
 namespace BecklynLayout\Twig;
 
+use BecklynLayout\Entity\Element;
 use Silex\Application;
 
 /**
@@ -73,15 +74,20 @@ class TwigExtension extends \Twig_Extension
      */
     public function templateList (array $list, array $options = [])
     {
-        $options = array_replace([
-            "fullScreen" => true
-        ], $options);
-
         // this is a flag which tells the component that it is rendered in a template list
         $options["inTemplateList"] = true;
 
-        return $this->application["twig"]->render("@core/templateList.twig", [
-            "templates" => $list,
+        $elements = array_map(
+            function ($reference)
+            {
+                return new Element($reference);
+            },
+            $list
+        );
+
+
+        return $this->application["twig"]->render("@core/template_list.twig", [
+            "elements" => $elements,
             "options" => $options
         ]);
     }
@@ -97,58 +103,6 @@ class TwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction("content",       [$this, "content"]),
             new \Twig_SimpleFunction("coreAsset",     [$this, "coreAsset"]),
             new \Twig_SimpleFunction("templateList",  [$this, "templateList"], ["is_safe" => ["html"]]),
-            new \Twig_SimpleFunction("allComponents", [$this->application["model.layout.component"], "getAllTemplateReferences"]),
-            new \Twig_SimpleFunction("allLayouts",    [$this->application["model.layout.layout"], "getAllTemplateReferences"]),
-            new \Twig_SimpleFunction("allPages",      [$this->application["model.layout.page"], "getAllTemplateReferences"]),
-        ];
-    }
-
-
-    /**
-     * Returns an anchor-compatible id
-     *
-     * @param string $template
-     *
-     * @return string
-     */
-    public function filterAnchor ($template)
-    {
-        $replace = [
-            "@"     => "",
-            "/"     => "-",
-            ".twig" => ""
-        ];
-
-        return str_replace(array_keys($replace), array_values($replace), $template);
-    }
-
-
-    /**
-     * Returns a title for this component
-     *
-     * @param string $template
-     *
-     * @return string
-     */
-    public function filterTitle ($template)
-    {
-        if (1 === preg_match("~^@(?P<type>.*?)\\/(?P<name>.*?)\\.twig$~", $template, $matches))
-        {
-            return ucwords($matches["type"]) . ": " . ucwords(str_replace(["_", "-"], " ", $matches["name"]));
-        }
-
-        return $template;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilters ()
-    {
-        return [
-            new \Twig_SimpleFilter("preview_anchor", [$this, "filterAnchor"]),
-            new \Twig_SimpleFilter("preview_title",  [$this, "filterTitle"]),
         ];
     }
 

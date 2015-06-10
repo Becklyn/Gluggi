@@ -9,27 +9,15 @@
         <main>
             <h1>{{ gluggi.config.title }}</h1>
 
-            <h2>Previews</h2>
-            {% if previews is not empty %}
+            {% for layoutGroup in layoutGroups if layoutGroup.elements is not empty %}
+                <h2>{{ layoutGroup.title }}</h2>
                 <ul>
-                {% for preview in previews %}
-                    <li><a href="{{ path("layout_preview", {preview: preview.key}) }}">{{ preview.title }}</a></li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>Keine Previews gefunden.</p>
-            {% endif %}
-
-            <h2>Pages</h2>
-            {% if pages is not empty %}
-                <ul>
-                    {% for page in pages %}
-                        <li><a href="{{ path("layout_page", {page: page.key}) }}">{{ page.title }}</a></li>
+                    <li><a href="{{ path("elements_overview", {elementType: layoutGroup.elementType}) }}"><strong>Element overview</strong></a></li>
+                    {% for element in layoutGroup.elements %}
+                        <li><a href="{{ path("element", {elementType: element.elementType, key: element.key}) }}">{{ element.title }}</a></li>
                     {% endfor %}
                 </ul>
-            {% else %}
-                <p>Keine Pages gefunden.</p>
-            {% endif %}
+            {% endfor %}
         </main>
     </body>
 </html>

@@ -14,6 +14,8 @@
         {% endblock %}
     </head>
     <body class="{{ bodyClass|default("") }}">
-        {% block body %}{% endblock %}
+        {% block body %}
+            {% block content %}{% endblock %}
+        {% endblock %}
     </body>
 </html>

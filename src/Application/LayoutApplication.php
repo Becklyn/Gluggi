@@ -4,6 +4,7 @@
 namespace BecklynLayout\Application;
 
 use BecklynLayout\Controller\CoreController;
+use BecklynLayout\Model\ElementTypesModel;
 use BecklynLayout\Model\TemplateListingModel;
 use BecklynLayout\Twig\TwigExtension;
 use Silex\Application;
@@ -18,6 +19,9 @@ use Twig_Environment;
  */
 class LayoutApplication extends Application
 {
+
+
+
     /**
      * Bootstraps the complete application
      *
@@ -27,13 +31,13 @@ class LayoutApplication extends Application
     public function bootstrap ($webDir, array $config = [])
     {
         $baseDir = dirname($webDir);
-        $config  = $this->resolveConfig($config);
+        $this["gluggi.config"] = $this->resolveConfig($config);
 
         $this->registerProviders();
         $this->registerCoreTwigNamespace();
         $this->registerModelsAndTwigLayoutNamespaces($baseDir);
         $this->registerControllers();
-        $this->registerTwigExtensions($config);
+        $this->registerTwigExtensions();
         $this->defineCoreRouting();
     }
 
@@ -54,10 +58,7 @@ class LayoutApplication extends Application
      */
     private function registerCoreTwigNamespace ()
     {
-        $libDir = dirname(dirname(__DIR__)) . "/resources";
-
-        // register core
-        $this["twig.loader.filesystem"]->addPath("{$libDir}/views", "core");
+        $this["twig.loader.filesystem"]->addPath(__DIR__ . "/../../resources/views", "core");
     }
 
 
@@ -68,25 +69,15 @@ class LayoutApplication extends Application
      */
     private function registerModelsAndTwigLayoutNamespaces ($baseDir)
     {
-        $parts = [
-            "component" => "{$baseDir}/layout/views/components",
-            "layout"    => "{$baseDir}/layout/views/layouts",
-            "page"      => "{$baseDir}/layout/views/pages",
-            "preview"   => "{$baseDir}/layout/views"
-        ];
+        $elementTypesModel = new ElementTypesModel($baseDir);
 
-        foreach ($parts as $partNamespace => $partBaseUrl)
+        // model
+        $this["model.element_types"] = $elementTypesModel;
+
+        // twig template namespaces
+        foreach ($elementTypesModel->getAllElementTypes() as $elementType)
         {
-            // model
-            $this["model.layout.{$partNamespace}"] = $this->share(
-                function () use ($partBaseUrl, $partNamespace)
-                {
-                    return new TemplateListingModel($partBaseUrl, $partNamespace);
-                }
-            );
-
-            // twig template namespace
-            $this["twig.loader.filesystem"]->addPath($partBaseUrl, $partNamespace);
+            $this["twig.loader.filesystem"]->addPath($elementTypesModel->getTemplateDirOfElementType($elementType), $elementType);
         }
     }
 
@@ -98,7 +89,7 @@ class LayoutApplication extends Application
     {
         $this["controller.core"] = $this->share(function ()
             {
-                return new CoreController($this["model.layout.preview"], $this["model.layout.page"], $this["twig"]);
+                return new CoreController($this["model.element_types"], $this["twig"], $this["gluggi.config"]);
             }
         );
     }
@@ -106,20 +97,18 @@ class LayoutApplication extends Application
 
     /**
      * Registers all used twig extensions
-     *
-     * @param array $config
      */
-    private function registerTwigExtensions (array $config)
+    private function registerTwigExtensions ()
     {
         $this['twig'] = $this->share($this->extend('twig',
-                function (Twig_Environment $twig, Application $app) use ($config)
+                function (Twig_Environment $twig, Application $app)
                 {
                     // add custom extension
                     $twig->addExtension(new TwigExtension($app));
 
                     // add global gluggi variable
                     $twig->addGlobal("gluggi", [
-                        "config" => $config
+                        "config" => $this["gluggi.config"]
                     ]);
 
                     return $twig;
@@ -134,9 +123,9 @@ class LayoutApplication extends Application
      */
     private function defineCoreRouting ()
     {
-        $this->get("/",                  "controller.core:indexAction");
-        $this->get("/preview/{preview}", "controller.core:previewAction")->bind("layout_preview");
-        $this->get("/page/{page}",       "controller.core:pageAction")->bind("layout_page");
+        $this->get("/",                    "controller.core:indexAction");
+        $this->get("/all/{elementType}",   "controller.core:elementsOverviewAction")->bind("elements_overview");
+        $this->get("/{elementType}/{key}", "controller.core:showElementAction")->bind("element");
     }
 
 
@@ -152,7 +141,8 @@ class LayoutApplication extends Application
         $optionsResolver = new OptionsResolver();
 
         $optionsResolver->setDefaults([
-            "title" => "Gluggi"
+            "title" => "Gluggi",
+            "base_template" => "@core/base.twig",
         ]);
 
         return $optionsResolver->resolve($config);

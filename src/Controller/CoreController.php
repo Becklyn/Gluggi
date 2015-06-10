@@ -3,21 +3,18 @@
 
 namespace BecklynLayout\Controller;
 
-use BecklynLayout\Model\TemplateListingModel;
+use BecklynLayout\Entity\Element;
+use BecklynLayout\Model\ElementTypesModel;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class CoreController
 {
     /**
-     * @var TemplateListingModel
+     * @var ElementTypesModel
      */
-    private $previewModel;
-
-
-    /**
-     * @var TemplateListingModel
-     */
-    private $pageModel;
+    private $elementTypesModel;
 
 
     /**
@@ -26,11 +23,15 @@ class CoreController
     private $twig;
 
 
-    public function __construct (TemplateListingModel $previewModel, TemplateListingModel $pageModel, \Twig_Environment $twig)
+
+    /**
+     * @param ElementTypesModel $elementTypesModel
+     * @param \Twig_Environment $twig
+     */
+    public function __construct (ElementTypesModel $elementTypesModel, \Twig_Environment $twig)
     {
-        $this->previewModel = $previewModel;
-        $this->pageModel    = $pageModel;
-        $this->twig         = $twig;
+        $this->elementTypesModel = $elementTypesModel;
+        $this->twig              = $twig;
     }
 
 
@@ -41,49 +42,83 @@ class CoreController
      */
     public function indexAction ()
     {
+        $layoutGroups = array_map(
+            function ($elementType)
+            {
+                return [
+                    "title"       => ucfirst($elementType) . "s",
+                    "elementType" => $elementType,
+                    "elements"    => $this->elementTypesModel->getListedElements($elementType),
+                ];
+            },
+            $this->elementTypesModel->getAllElementTypes()
+        );
+
+
         return $this->twig->render("@core/index.twig", [
-            "previews" => $this->previewModel->getListedTemplates(),
-            "pages"    => $this->pageModel->getListedTemplates()
+            "layoutGroups" => $layoutGroups,
         ]);
     }
+
 
 
     /**
      * Displays a preview file
      *
-     * @param string $preview
+     * @param string $elementType
+     * @param string $key
      *
      * @return string|Response
      */
-    public function previewAction ($preview)
+    public function showElementAction ($elementType, $key)
     {
-        $previewData = $this->previewModel->getTemplateDetails($preview);
-
-        if (null === $previewData)
+        try
         {
-            return new Response("Preview not found.", 404);
-        }
+            $element = $this->elementTypesModel->getElement($key, $elementType);
 
-        return $this->twig->render($previewData['reference']);
+            if ((null === $element) || $element->isHidden())
+            {
+                throw new NotFoundHttpException("Element '{$key}' of type '{$elementType}' not found.");
+            }
+
+            return $this->twig->render("@core/show_element.twig", [
+                "element" => $element
+            ]);
+        }
+        catch (\InvalidArgumentException $e)
+        {
+            throw new NotFoundHttpException("Unknown element type '{$elementType}'.", $e);
+        }
     }
 
 
+
     /**
-     * Displays a page
+     * Returns a list of all atoms
      *
-     * @param string $page
+     * @param $elementType
      *
-     * @return string|Response
+     * @return string
      */
-    public function pageAction ($page)
+    public function elementsOverviewAction ($elementType)
     {
-        $previewData = $this->pageModel->getTemplateDetails($page);
-
-        if (null === $previewData)
+        try
         {
-            return new Response("Preview not found.", 404);
-        }
+            $elementReferences = array_map(
+                function (Element $element)
+                {
+                    return $element->getReference();
+                },
+                $this->elementTypesModel->getListedElements($elementType)
+            );
 
-        return $this->twig->render($previewData['reference']);
+            return $this->twig->render("@core/elements_overview.twig", [
+                "elementReferences" => $elementReferences
+            ]);
+        }
+        catch (\InvalidArgumentException $e)
+        {
+            throw new NotFoundHttpException("Unknown element type '{$elementType}'.", $e);
+        }
     }
 }
