@@ -53,7 +53,7 @@ class ElementTypesModel
      */
     public function getAllElements ($elementType)
     {
-        $iterator = new \DirectoryIterator($this->getUserSubDirectory($elementType));
+        $iterator = new \DirectoryIterator($this->getUserSubDirectory("{$elementType}s"));
         $allElements = [];
 
         /** @var \SplFileInfo $file */
