@@ -53,7 +53,7 @@ class ElementTypesModel
      */
     public function getAllElements ($elementType)
     {
-        $iterator = new \DirectoryIterator($this->getTemplateDirOfElementType($elementType));
+        $iterator = new \DirectoryIterator($this->getUserSubDirectory($elementType));
         $allElements = [];
 
         /** @var \SplFileInfo $file */
@@ -126,19 +126,14 @@ class ElementTypesModel
 
 
     /**
-     * Returns the template dir of an element type
+     * Returns the subdirectory in the user's template dir
      *
-     * @param string $elementType
+     * @param string $directoryName
      *
      * @return string the template dir without the trailing slash
      */
-    public function getTemplateDirOfElementType ($elementType)
+    public function getUserSubDirectory ($directoryName)
     {
-        if (!in_array($elementType, $this->elementTypes, true))
-        {
-            throw new \InvalidArgumentException("Unknown element type: '{$elementType}'");
-        }
-
-        return "{$this->baseDir}/layout/views/{$elementType}s";
+        return "{$this->baseDir}/layout/views/{$directoryName}s";
     }
 }
