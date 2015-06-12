@@ -1,5 +1,5 @@
 "use strict";
-/* global jQuery:true */
+/* global jQuery:true gluggi:true */
 
 if (typeof jQuery !== "undefined")
 {
@@ -22,11 +22,21 @@ if (typeof jQuery !== "undefined")
                     {
                         var $element = $(element);
 
-                        $navigationElements.append($("<a></a>", {
-                            href: "#" + element.id,
-                            text: $element.find(".gluggi-element-title").text()
-                        }));
+                        $navigationElements.append(
+                            $("<a></a>", {
+                                href: "#" + element.id,
+                                text: $element.find(".gluggi-element-title").text()
+                            })
+                        );
                     }
+                );
+
+                $navigation.append(
+                    $("<a></a>", {
+                        href: gluggi.baseUrl,
+                        text: "Index",
+                        "class": "gluggi-link-index"
+                    })
                 );
             }
 

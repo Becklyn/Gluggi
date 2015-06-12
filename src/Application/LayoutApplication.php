@@ -127,7 +127,7 @@ class LayoutApplication extends Application
      */
     private function defineCoreRouting ()
     {
-        $this->get("/",                    "controller.core:indexAction");
+        $this->get("/",                    "controller.core:indexAction")->bind("index");
         $this->get("/all/{elementType}",   "controller.core:elementsOverviewAction")->bind("elements_overview");
         $this->get("/{elementType}/{key}", "controller.core:showElementAction")->bind("element");
     }

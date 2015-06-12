@@ -12,6 +12,11 @@
 
         {% block javascripts %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script>
+                var gluggi = {
+                    baseUrl: "{{ path("index") }}"
+                };
+            </script>
             <script src="{{ coreAsset("js/navigation.js") }}"></script>
         {% endblock %}
     </head>

@@ -78,7 +78,7 @@ html, body {
     box-shadow: 0 2px 4px 2px rgba(108, 113, 127, .3);
 }
 
-.gluggi-navigation a {
+.gluggi-navigation-elements a {
     display: block;
     padding: 10px 20px;
     font-size: 20px;
@@ -87,7 +87,7 @@ html, body {
     font-family: Arial, sans-serif;
 }
 
-.gluggi-navigation a:hover {
+.gluggi-navigation-elements a:hover {
     color: rgb(108, 113, 127);
     background-color: #fff;
 }
@@ -99,4 +99,11 @@ html, body {
 .gluggi-navigation-elements {
     max-height: 100%;
     overflow-y: auto;
+}
+
+.gluggi-link-index {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    color: #fff;
 }
