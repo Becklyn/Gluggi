@@ -10,6 +10,10 @@ if (typeof jQuery !== "undefined")
             var $navigationElements = $navigation.find(".gluggi-navigation-elements");
             var $button = $("#gluggi-navigation-button");
             var $body = $(document.body);
+            var buttonTexts = {
+                open: $button.text(),
+                close: "Close nav"
+            };
 
             function initializeNavigation ()
             {
@@ -35,6 +39,7 @@ if (typeof jQuery !== "undefined")
             function openNavigation ()
             {
                 $navigation.addClass("is-visible");
+                $button.text(buttonTexts.close);
 
                 window.setTimeout(
                     function ()
@@ -49,6 +54,7 @@ if (typeof jQuery !== "undefined")
             {
                 $navigation.removeClass("is-visible");
                 $body.off("click", closeNavigation);
+                $button.text(buttonTexts.open);
             }
 
             function preventClick (event)
