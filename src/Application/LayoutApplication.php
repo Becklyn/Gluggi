@@ -82,7 +82,7 @@ class LayoutApplication extends Application
         }
 
 
-        $this["twig.loader.filesystem"]->addPath($elementTypesModel->getUserSubDirectory("base"), "base");
+        $this["twig.loader.filesystem"]->addPath($elementTypesModel->getUserSubDirectory("_base"), "base");
     }
 
 
