@@ -58,9 +58,10 @@ class DownloadModel
                     continue;
                 }
 
-                $downloads[] = new Download($file, self::RELATIVE_DOWNLOAD_DIR);
+                $downloads[$file->getFilename()] = new Download($file, self::RELATIVE_DOWNLOAD_DIR);
             }
 
+            ksort($downloads);
             return $downloads;
         }
         catch (\UnexpectedValueException $e)
