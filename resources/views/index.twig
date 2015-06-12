@@ -1,3 +1,4 @@
+{# @var downloads \BecklynLayout\Entity\Download[] #}
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,6 +19,15 @@
                     {% endfor %}
                 </ul>
             {% endfor %}
+
+            {% if downloads is not empty %}
+                <h2>Downloads</h2>
+                <ul>
+                    {% for download in downloads %}
+                    <li><a href="{{ download.url }}">{{ download.fileName }}</a> <small>{{ download.size }}, {{ download.lastModified | date("d.m.Y H:i") }} Uhr</small></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </main>
     </body>
 </html>

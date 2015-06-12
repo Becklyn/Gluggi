@@ -4,6 +4,7 @@
 namespace BecklynLayout\Application;
 
 use BecklynLayout\Controller\CoreController;
+use BecklynLayout\Model\DownloadModel;
 use BecklynLayout\Model\ElementTypesModel;
 use BecklynLayout\Twig\TwigExtension;
 use Silex\Application;
@@ -72,6 +73,7 @@ class LayoutApplication extends Application
 
         // model
         $this["model.element_types"] = $elementTypesModel;
+        $this["model.download"]      = new DownloadModel($baseDir);
 
         // twig template namespaces
         foreach ($elementTypesModel->getAllElementTypes() as $elementType)
@@ -88,7 +90,7 @@ class LayoutApplication extends Application
     {
         $this["controller.core"] = $this->share(function ()
             {
-                return new CoreController($this["model.element_types"], $this["twig"], $this["gluggi.config"]);
+                return new CoreController($this["model.element_types"], $this["model.download"], $this["twig"]);
             }
         );
     }

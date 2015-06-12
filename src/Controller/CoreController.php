@@ -4,6 +4,7 @@
 namespace BecklynLayout\Controller;
 
 use BecklynLayout\Entity\Element;
+use BecklynLayout\Model\DownloadModel;
 use BecklynLayout\Model\ElementTypesModel;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -18,6 +19,12 @@ class CoreController
 
 
     /**
+     * @var DownloadModel
+     */
+    private $downloadModel;
+
+
+    /**
      * @var \Twig_Environment
      */
     private $twig;
@@ -26,11 +33,13 @@ class CoreController
 
     /**
      * @param ElementTypesModel $elementTypesModel
+     * @param DownloadModel     $downloadModel
      * @param \Twig_Environment $twig
      */
-    public function __construct (ElementTypesModel $elementTypesModel, \Twig_Environment $twig)
+    public function __construct (ElementTypesModel $elementTypesModel, DownloadModel $downloadModel, \Twig_Environment $twig)
     {
         $this->elementTypesModel = $elementTypesModel;
+        $this->downloadModel     = $downloadModel;
         $this->twig              = $twig;
     }
 
@@ -57,6 +66,7 @@ class CoreController
 
         return $this->twig->render("@core/index.twig", [
             "layoutGroups" => $layoutGroups,
+            "downloads"    => $this->downloadModel->getAllDownloads(),
         ]);
     }
 

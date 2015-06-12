@@ -25,7 +25,7 @@ h1 + h2 {
 }
 
 a {
-    color: black;
+    color: #337ab7;
     text-decoration: none;
 }
 
@@ -35,4 +35,13 @@ a:hover {
 
 li {
     margin-bottom: .5em;
+}
+
+small {
+    color: #AAA;
+    font-size: .8em;
+}
+
+li small {
+    margin-left: .5rem;
 }
