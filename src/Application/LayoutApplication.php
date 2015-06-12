@@ -78,7 +78,7 @@ class LayoutApplication extends Application
         // twig template namespaces
         foreach ($elementTypesModel->getAllElementTypes() as $elementType)
         {
-            $this["twig.loader.filesystem"]->addPath($elementTypesModel->getUserSubDirectory($elementType), $elementType);
+            $this["twig.loader.filesystem"]->addPath($elementTypesModel->getUserSubDirectory("{$elementType}s"), $elementType);
         }
 
 

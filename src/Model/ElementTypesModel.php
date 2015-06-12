@@ -134,6 +134,6 @@ class ElementTypesModel
      */
     public function getUserSubDirectory ($directoryName)
     {
-        return "{$this->baseDir}/layout/views/{$directoryName}s";
+        return "{$this->baseDir}/layout/views/{$directoryName}";
     }
 }
