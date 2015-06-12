@@ -7,13 +7,12 @@
         <link rel="stylesheet" href="{{ coreAsset("/css/core.css") }}">
     </head>
     <body>
-        <main>
+        <main class="index-listing">
             <h1>{{ gluggi.config.title }}</h1>
 
             {% for layoutGroup in layoutGroups if layoutGroup.elements is not empty %}
-                <h2>{{ layoutGroup.title }}</h2>
+                <h2>{{ layoutGroup.title }} <a href="{{ path("elements_overview", {elementType: layoutGroup.elementType}) }}">show all</a></h2>
                 <ul>
-                    <li><a href="{{ path("elements_overview", {elementType: layoutGroup.elementType}) }}"><strong>Element overview</strong></a></li>
                     {% for element in layoutGroup.elements %}
                         <li><a href="{{ path("element", {elementType: element.elementType, key: element.key}) }}">{{ element.title }}</a></li>
                     {% endfor %}
