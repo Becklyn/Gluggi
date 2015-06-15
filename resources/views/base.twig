@@ -9,20 +9,19 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset("/css/app.css") }}">
         {% endblock %}
-
-        {% block javascripts %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <script>
-                var gluggi = {
-                    baseUrl: "{{ path("index") }}"
-                };
-            </script>
-            <script src="{{ coreAsset("js/navigation.js") }}"></script>
-        {% endblock %}
     </head>
     <body class="{{ bodyClass|default("") }}">
         {% block body %}
             {% block content %}{% endblock %}
+            {% block javascripts %}
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <script>
+                    var gluggi = {
+                        baseUrl: "{{ path("index") }}"
+                    };
+                </script>
+                <script src="{{ coreAsset("js/navigation.js") }}"></script>
+            {% endblock %}
         {% endblock %}
     </body>
 </html>
