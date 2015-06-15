@@ -9,7 +9,11 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset("/css/app.css") }}">
         {% endblock %}
-
+    </head>
+    <body class="{{ bodyClass|default("") }}">
+        {% block body %}
+            {% block content %}{% endblock %}
+        {% endblock %}
         {% block javascripts %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <script>
@@ -18,11 +22,6 @@
                 };
             </script>
             <script src="{{ coreAsset("js/navigation.js") }}"></script>
-        {% endblock %}
-    </head>
-    <body class="{{ bodyClass|default("") }}">
-        {% block body %}
-            {% block content %}{% endblock %}
         {% endblock %}
     </body>
 </html>
