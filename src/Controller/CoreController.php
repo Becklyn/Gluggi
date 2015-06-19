@@ -91,7 +91,9 @@ class CoreController
                 throw new NotFoundHttpException("Element '{$key}' of type '{$elementType}' not found.");
             }
 
-            return $this->twig->render("@core/show_element.twig", [
+            $templateSuffix = $this->elementTypesModel->isFullPageElementType($elementType) ? "_fullpage" : "";
+
+            return $this->twig->render("@core/show_element{$templateSuffix}.twig", [
                 "element" => $element
             ]);
         }

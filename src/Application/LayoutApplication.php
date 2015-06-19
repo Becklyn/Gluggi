@@ -105,20 +105,19 @@ class LayoutApplication extends Application
     private function registerTwigExtensions ()
     {
         $this['twig'] = $this->share($this->extend('twig',
-                function (Twig_Environment $twig, Application $app)
-                {
-                    // add custom extension
-                    $twig->addExtension(new TwigExtension($app));
+            function (Twig_Environment $twig, Application $app)
+            {
+                // add custom extension
+                $twig->addExtension(new TwigExtension($app));
 
-                    // add global gluggi variable
-                    $twig->addGlobal("gluggi", [
-                        "config" => $this["gluggi.config"]
-                    ]);
+                // add global gluggi variable
+                $twig->addGlobal("gluggi", [
+                    "config" => $this["gluggi.config"]
+                ]);
 
-                    return $twig;
-                }
-            )
-        );
+                return $twig;
+            }
+        ));
     }
 
 

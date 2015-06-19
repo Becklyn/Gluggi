@@ -17,12 +17,24 @@ class ElementTypesModel
      * @var string[]
      */
     private $elementTypes = [
-        "atom",
-        "molecule",
-        "organism",
-        "template",
-        "page",
+        "atom" => [
+            "isFullPage" => false,
+        ],
+        "molecule" => [
+            "isFullPage" => false,
+        ],
+        "organism" => [
+            "isFullPage" => false,
+        ],
+        "template" => [
+            "isFullPage" => true,
+        ],
+        "page" => [
+            "isFullPage" => true,
+        ],
     ];
+
+
 
 
     /**
@@ -120,7 +132,7 @@ class ElementTypesModel
      */
     public function getAllElementTypes ()
     {
-        return $this->elementTypes;
+        return array_keys($this->elementTypes);
     }
 
 
@@ -135,5 +147,21 @@ class ElementTypesModel
     public function getUserSubDirectory ($directoryName)
     {
         return "{$this->baseDir}/layout/views/{$directoryName}";
+    }
+
+
+
+    /**
+     * Returns whether the given element type is full page
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function isFullPageElementType ($key)
+    {
+        return array_key_exists($key, $this->elementTypes)
+            ? $this->elementTypes[$key]["isFullPage"]
+            : null;
     }
 }

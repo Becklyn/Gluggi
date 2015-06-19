@@ -65,6 +65,19 @@ class TwigExtension extends \Twig_Extension
 
 
     /**
+     * Returns whether the given element type is full page
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    public function isFullPageElementType ($key)
+    {
+        return $this->application["model.element_types"]->isFullPageElementType($key);
+    }
+
+
+    /**
      * Renders a overview of the given elements
      *
      * @param string[] $list
@@ -106,10 +119,11 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions ()
     {
         return [
-            new \Twig_SimpleFunction("asset",            [$this, "asset"]),
-            new \Twig_SimpleFunction("content",          [$this, "content"]),
-            new \Twig_SimpleFunction("coreAsset",        [$this, "coreAsset"]),
-            new \Twig_SimpleFunction("elementsOverview", [$this, "elementsOverview"], ["is_safe" => ["html"]]),
+            new \Twig_SimpleFunction("asset",                 [$this, "asset"]),
+            new \Twig_SimpleFunction("content",               [$this, "content"]),
+            new \Twig_SimpleFunction("coreAsset",             [$this, "coreAsset"]),
+            new \Twig_SimpleFunction("isFullPageElementType", [$this, "isFullPageElementType"]),
+            new \Twig_SimpleFunction("elementsOverview",      [$this, "elementsOverview"], ["is_safe" => ["html"]]),
         ];
     }
 
