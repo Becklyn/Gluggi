@@ -106,7 +106,7 @@ class CoreController
 
 
     /**
-     * Returns a list of all atoms
+     * Returns a list of all elements of the given type
      *
      * @param $elementType
      *
