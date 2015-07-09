@@ -95,8 +95,16 @@ class ElementTypesModel
      */
     public function getListedElements ($elementType)
     {
+        $allElements = $this->getAllElements($elementType);
+        usort($allElements,
+            function (Element $element1, Element $element2)
+            {
+                return strnatcasecmp($element1->getKey(), $element2->getKey());
+            }
+        );
+
         return array_filter(
-            $this->getAllElements($elementType),
+            $allElements,
             function (Element $element)
             {
                 return !$element->isHidden();
