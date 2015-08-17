@@ -14,7 +14,7 @@
                 <h2>{{ layoutGroup.title }}{% if not isFullPageElementType(layoutGroup.elementType) %} <a href="{{ path("elements_overview", {elementType: layoutGroup.elementType}) }}">show all</a>{% endif %}</h2>
                 <ul>
                     {% for element in layoutGroup.elements %}
-                        <li><a href="{{ path("element", {elementType: element.elementType, key: element.key}) }}">{{ element.title }}</a></li>
+                        <li><a href="{% if not isFullPageElementType(layoutGroup.elementType) %}{{ path("elements_overview", {elementType: layoutGroup.elementType}) }}#{{ layoutGroup.elementType ~ "-" ~ element.key }}{% else %}{{ path("element", {elementType: element.elementType, key: element.key}) }}{% endif %}">{{ element.title }}</a></li>
                     {% endfor %}
                 </ul>
             {% endfor %}
@@ -23,7 +23,7 @@
                 <h2>Downloads</h2>
                 <ul>
                     {% for download in downloads %}
-                    <li><a href="{{ download.url }}">{{ download.fileName }}</a> <small>{{ download.size }}, {{ download.lastModified | date("d.m.Y H:i") }} Uhr</small></li>
+                        <li><a href="{{ download.url }}">{{ download.fileName }}</a> <small>{{ download.size }}, {{ download.lastModified | date("d.m.Y H:i") }} Uhr</small></li>
                     {% endfor %}
                 </ul>
             {% endif %}
