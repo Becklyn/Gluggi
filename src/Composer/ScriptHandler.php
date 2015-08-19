@@ -36,17 +36,8 @@ class ScriptHandler
 
         if (file_exists($webAssetsDir))
         {
-            if ($io->askConfirmation("The core assets dir was already found ({$webAssetsDir}).\nDo you want to overwrite it? [Y/n] "))
-            {
-                $fileSystem->remove($webAssetsDir);
-                $io->write("Existing core assets dir removed.");
-            }
-            else
-            {
-                $io->write("Aborting due to existing core assets dir.");
-                $io->write("");
-                return;
-            }
+            $fileSystem->remove($webAssetsDir);
+            $io->write("Existing core assets dir removed.");
         }
 
         $assetsDir = dirname(dirname(__DIR__)) . "/resources/public";
