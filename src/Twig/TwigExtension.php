@@ -52,6 +52,42 @@ class TwigExtension extends \Twig_Extension
 
 
     /**
+     * Inlines an assets file
+     *
+     * @param string $asset
+     *
+     * @return string
+     */
+    public function inlineAsset ($asset)
+    {
+        if (is_file($filePath = "{$this->application['gluggi.baseDir']}/layout/assets/" . ltrim($asset, "/")))
+        {
+            return file_get_contents($filePath);
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Inlines a content file
+     *
+     * @param string $asset
+     *
+     * @return string
+     */
+    public function inlineContent ($asset)
+    {
+        if (is_file($filePath = "{$this->application['gluggi.baseDir']}/layout/content/" . ltrim($asset, "/")))
+        {
+            return file_get_contents($filePath);
+        }
+
+        return null;
+    }
+
+
+    /**
      * Generates a path to a core asset
      *
      * @param string $asset
@@ -120,7 +156,9 @@ class TwigExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction("asset",                 [$this, "asset"]),
+            new \Twig_SimpleFunction("inlineAsset",           [$this, "inlineAsset"], ["is_safe" => ["html"]]),
             new \Twig_SimpleFunction("content",               [$this, "content"]),
+            new \Twig_SimpleFunction("inlineContent",         [$this, "inlineContent"], ["is_safe" => ["html"]]),
             new \Twig_SimpleFunction("coreAsset",             [$this, "coreAsset"]),
             new \Twig_SimpleFunction("isFullPageElementType", [$this, "isFullPageElementType"]),
             new \Twig_SimpleFunction("elementsOverview",      [$this, "elementsOverview"], ["is_safe" => ["html"]]),

@@ -32,6 +32,7 @@ class LayoutApplication extends Application
     {
         $baseDir = dirname($webDir);
         $this["gluggi.config"] = $this->resolveConfig($config);
+        $this["gluggi.baseDir"] = $baseDir;
 
         $this->registerProviders();
         $this->registerCoreTwigNamespace();
