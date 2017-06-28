@@ -107,3 +107,13 @@ html, body {
     right: 10px;
     color: #fff;
 }
+
+.gluggi-navigation-filter {
+    margin: 0 auto 10px;
+    border: 0;
+    width: 100%;
+    display: block;
+    height: 50px;
+    padding: 0 15px;
+    outline: none;
+}
